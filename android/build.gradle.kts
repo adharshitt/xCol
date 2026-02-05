@@ -1,21 +1,36 @@
+// android/build.gradle.kts
+
 allprojects {
+
     repositories {
+
         google()
+
         mavenCentral()
+
     }
+
 }
 
-val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// Resetting to standard Flutter build location so FlutLab can find the APK
+
+rootProject.layout.buildDirectory.set(file("${project.projectDir}/../build"))
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
+
+    project.layout.buildDirectory.set(file("${rootProject.layout.buildDirectory.get()}/${project.name}"))
+
 }
+
 subprojects {
+
     project.evaluationDependsOn(":app")
+
 }
 
 tasks.register<Delete>("clean") {
+
     delete(rootProject.layout.buildDirectory)
+
 }
+
